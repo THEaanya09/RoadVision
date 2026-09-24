@@ -1,5 +1,84 @@
 # RoadVision
 
+**Road-defect detection with YOLO11n: a small-data study in deterministic splitting, controlled experiments, and honest error analysis.**
+
+![Status](https://img.shields.io/badge/status-experimental-orange)
+![Model](https://img.shields.io/badge/model-YOLO11n-blue)
+![Framework](https://img.shields.io/badge/framework-Ultralytics-informational)
+
+> **Not production-ready.** Current test mAP50 is **0.077**. Two of the four classes have effectively zero useful detection performance. This repository documents an experimentation and evaluation process, not a deployable detector.
+
+---
+
+## Overview
+
+RoadVision is a road-defect object detection project built on YOLO11n. It uses a small custom dataset of road images with bounding-box annotations for four defect classes.
+
+The project so far covers:
+
+- a deterministic, multilabel-stratified train/val/test split with a frozen manifest,
+- a set of controlled training experiments,
+- IoU-based, confidence-threshold, and confusion-matrix error analysis,
+- a final inference run on the held-out test set.
+
+The main finding is that on this dataset, **data scale, not hyperparameters, is the bottleneck.**
+
+## Problem Statement
+
+Manual road inspection is slow and inconsistent. An automated detector that localizes road defects in images could support inspection workflows. This project asks how far a lightweight detector (YOLO11n) can get on a very small, custom-collected dataset, and where and why it fails.
+
+## What RoadVision Currently Does
+
+| Area | Status |
+|---|---|
+| Dataset curation and annotation (small custom set) | Done |
+| Deterministic multilabel-stratified split with frozen manifest | Done |
+| YOLO11n training and controlled experiments | Done |
+| Confidence-threshold, IoU, and confusion-matrix analysis | Done |
+| Final inference on the 21-image test set | Done |
+| Dataset expansion, cross-domain evaluation | **Future work** |
+| API, frontend, Docker, deployment | **Future work** |
+
+## Dataset
+
+| Property | Value |
+|---|---|
+| Total images | 117 |
+| Images with annotations | 64 |
+| Intentional background (unlabeled) images | 53 |
+| Total bounding boxes | 479 |
+| Classes | 4 (`D00`, `D10`, `D20`, `D40`) |
+
+This is the original small Custom-City dataset. **No external data has been added.**
+
+**Known data issues**
+
+- The source data contains **duplicate / near-duplicate images** (for example, the same source image appearing several times with different transformations). Complete deduplication has **not** been performed, so some train/val/test leakage between duplicates cannot be ruled out. This likely makes reported numbers optimistic, not pessimistic.
+- 117 images (21 in test) is too small for strong generalization. Per-class test metrics are high-variance and should not be over-interpreted.
+
+![Duplicate images in the source data](assets/images/source_duplicates_India_006767.jpeg)
+*The same source image (India_006767) appears multiple times with different transformations in the source data. This is an example of the duplication problem noted above.*
+
+## Class Definitions
+
+Classes are identified by ID only: `D00`, `D10`, `D20`, `D40`.
+
+The `Dxx` naming resembles the convention used by public road-damage benchmarks, but class semantics for this dataset have **not been formally verified or documented in this project**, so no definitions are asserted here. Verifying and harmonizing class definitions is a planned step (see Future Work).
+
+## Dataset Split
+
+| Split | Images |
+|---|---|
+| Train | 80 |
+| Validation | 16 |
+| Test | 21 |
+
+- **Method:** multilabel stratified splitting (so class presence is balanced across splits).
+- **Seed:** 42.
+- **Manifest:** the split was reconstructed deterministically and a manifest was frozen so that every experiment uses identical splits.
+- **Caveat:** the split is deterministic, but it is not verified leakage-free because duplicates in the source data were not fully removed.
+
+## Methodology / ML Pipeline
 
 ## Model and Training Configuration
 
