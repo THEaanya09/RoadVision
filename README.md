@@ -161,14 +161,6 @@ Annotated predictions and label outputs were saved.
 
 The panels below are shown deliberately, including the failures. Predictions appear rendered at very low confidence thresholds, which is why many overlapping low-score boxes are visible. This illustrates the finding above: at low thresholds the model produces large numbers of candidate boxes that are not useful detections.
 
-![Ground truth vs baseline vs fine-tuned, example set 1](assets/images/gt_baseline_finetuned_grid.jpeg)
-
-![Ground truth vs baseline vs fine-tuned, example 2](assets/images/gt_baseline_finetuned_1.jpeg)
-
-![Ground truth vs baseline, example 3](assets/images/gt_baseline_2.jpeg)
-
-![Ground truth vs baseline, example 4](assets/images/gt_baseline_3.jpeg)
-
 ## Limitations
 
 - **Small dataset:** 117 images (64 labeled), 21 test images. Metrics are noisy and not statistically robust.
